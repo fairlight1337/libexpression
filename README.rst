@@ -1,7 +1,11 @@
-# libexpression
+libexpression
+=============
 A C++ library to express (and evaluate) symbolic equations
 
-## Building the project
+See the documentation `here https://libexpression.readthedocs.io/en/latest/#`.
+
+Building the project
+--------------------
 The `libexpression` project's buils system is CMake based. In order to build it from source, run the following commands from your command line:
 ```bash
 git clone https://github.com/fairlight1337/libexpression.git
