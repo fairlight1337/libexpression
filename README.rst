@@ -116,6 +116,14 @@ VX.Y.Z
 
 * Full Doxygen coverage.
 
-* Support for operator ``=``.
+* Support for operator ``=``, ``+``.
 
 * Dynamic transformations (expression simplification).
+
+* Python bindings.
+
+* C# bindings.
+
+* Ubuntu package generation and maintenance.
+
+* More complex examples that show how pseudo-code is turned into expressions via this library.
