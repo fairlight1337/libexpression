@@ -20,6 +20,7 @@ The `libexpression` project's buils system is CMake based. In order to build it 
 following commands from your command line:
 
 .. code-block:: bash
+
    git clone https://github.com/fairlight1337/libexpression.git
    cd libexpression
    mkdir build
@@ -31,4 +32,5 @@ The resulting binary executables will then be in `build/bin`. After building, ru
 executable with:
 
 .. code-block:: bash
+
    ./bin/libexpression-bin
