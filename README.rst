@@ -127,3 +127,7 @@ VX.Y.Z
 * Ubuntu package generation and maintenance.
 
 * More complex examples that show how pseudo-code is turned into expressions via this library.
+
+* Performance KPIs.
+
+* Code coverage graphs.
