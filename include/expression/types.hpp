@@ -5,17 +5,17 @@
 
 namespace expression {
 
-enum class State {
+enum class State : uint32_t {
   // The value state is neither True nor False and has to be decided via solver inference.
-  Unbound,
+  Unbound = 0,
   // The value is bound to be logically true.
-  True,
+  True = 1,
   // The value is bound to be logically false.
-  False
+  False = 2
 };
 
-}  // namespace expression
+std::string to_string(expression::State state);
 
-std::ostream& operator<<(std::ostream& stream, const expression::State state);
+}  // namespace expression
 
 #endif  // EXPRESSION_TYPES_HPP_

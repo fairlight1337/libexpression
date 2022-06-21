@@ -3,12 +3,19 @@
 #include <iostream>
 #include <string>
 
-std::ostream& operator<<(std::ostream& stream, const expression::State state) {
+namespace expression {
+
+std::string to_string(expression::State state) {
   switch (state) {
-  case expression::State::Unbound: stream << "u"; break;
-  case expression::State::True: stream << "t"; break;
-  case expression::State::False: stream << "f"; break;
-  default: stream << "<UNDEF " << static_cast<int>(state) << ">"; break;
+  case expression::State::Unbound:
+    return "u";
+  case expression::State::True:
+    return "t";
+  case expression::State::False:
+    return "f";
+  default:
+    return "<UNDEF " + std::to_string(static_cast<uint32_t>(state)) + ">";
   }
-  return stream;
 }
+
+}  // namespace expression

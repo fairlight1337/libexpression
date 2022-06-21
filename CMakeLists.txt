@@ -1,4 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.7.2)
+
+# Configure clang-tidy
+set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*,-modernize-use-trailing-return-type,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator;-header-filter=.*;-warnings-as-errors=*")
+
 project(expression)
 
 # Using C++ 17
@@ -22,7 +26,6 @@ set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/3rdparty)
 
 include_directories(
   include)
-#  ${THIRDPARTY_DIR}/Catch2/single_include)
 
 link_directories(
   )
@@ -38,32 +41,3 @@ add_executable(${PROJECT_NAME}-bin
 
 target_link_libraries(${PROJECT_NAME}-bin
   ${PROJECT_NAME})
-
-### Tests
-
-# enable_testing()
-
-# macro(add_expression_test test_name)
-#   message(STATUS "Adding test '${test_name}'")
-
-#   add_executable(${test_name}-test
-#     ${PROJECT_SOURCE_DIR}/test/${test_name}_test.cpp)
-
-#   target_link_libraries(${test_name}-test
-#     ${PROJECT_NAME})
-
-#   add_test(
-#     NAME ${test_name}-test
-#     COMMAND ${test_name}-test)
-# endmacro()
-
-# if(EXPRESSION_BUILD_TESTS)
-#   # Test cases: Expression
-#   add_expression_test(expression)
-
-#   # Test cases: And
-#   add_expression_test(and)
-
-#   # Test cases: Solution
-#   add_expression_test(solution)
-# endif()
