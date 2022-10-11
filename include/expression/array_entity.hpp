@@ -85,7 +85,9 @@ class ArrayEntity : public Entity {
   }
 
  protected:
-  const std::vector<std::shared_ptr<Entity>>& getEntities() { return entities_; }
+  [[nodiscard]] std::vector<std::shared_ptr<Entity>>& getEntities() { return entities_; }
+
+  [[nodiscard]] const std::vector<std::shared_ptr<Entity>>& getEntities() const { return entities_; }
 
  private:
   std::vector<std::shared_ptr<Entity>> entities_;

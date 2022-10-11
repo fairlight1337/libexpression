@@ -1,13 +1,18 @@
 #ifndef EXPRESSION_EXPRESSION_HPP_
 #define EXPRESSION_EXPRESSION_HPP_
 
+// Standard
 #include <climits>
 #include <iostream>
 #include <string>
 
+// Entities
 #include <expression/array_entity.hpp>
 #include <expression/constant_entity.hpp>
 #include <expression/variable_entity.hpp>
+
+// Operators
+#include <expression/and_operator.hpp>
 
 namespace expression {
 
@@ -139,6 +144,35 @@ class Expression {
       }
     }
     return false;
+  }
+
+  Expression operator&(const Expression& expr) const {
+    Expression<TDataType, BitWidth> and_expr(0);
+    for (size_t idx = 0; idx < entity_->size(); ++idx) {
+      const std::shared_ptr<ConstantEntity> lhs_const =
+          std::dynamic_pointer_cast<ConstantEntity>(entity_->operator[](idx));
+      const std::shared_ptr<ConstantEntity> rhs_const =
+          std::dynamic_pointer_cast<ConstantEntity>(expr.entity_->operator[](idx));
+      const State lhs_state = lhs_const ? lhs_const->state() : State::False;
+      const State rhs_state = rhs_const ? rhs_const->state() : State::False;
+
+      if ((lhs_const && lhs_state == State::False) || (rhs_const && rhs_state == State::False)) {
+        and_expr.entity_->operator[](idx) = std::make_shared<ConstantEntity>(State::False);
+      } else if ((lhs_const && lhs_state == State::True) ||
+                 (rhs_const && rhs_state == State::True)) {
+        and_expr.entity_->operator[](idx) = std::make_shared<ConstantEntity>(State::True);
+      } else if ((lhs_const && lhs_state == State::True) && !rhs_const) {
+        and_expr.entity_->operator[](idx) = expr.entity_->operator[](idx);
+      } else if (!lhs_const && (rhs_const && rhs_state == State::True)) {
+        and_expr.entity_->operator[](idx) = entity_->operator[](idx);
+      } else {
+        and_expr.entity_->operator[](idx) =
+            std::make_shared<AndOperator<TDataType, BitWidth>>(
+                entity_->operator[](idx), expr.entity_->operator[](idx));
+      }
+    }
+
+    return and_expr;
   }
 
   template<unsigned int Length>
