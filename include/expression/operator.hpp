@@ -26,6 +26,39 @@ class Operator : public ArrayEntity<TDataType, NumOperands> {
     return symbol_ + "(" + out + ")";
   }
 
+  bool operator==(const std::shared_ptr<Entity>& entity) const override {
+    if (auto op = std::dynamic_pointer_cast<Operator<TDataType, NumOperands, BitWidth>>(entity)) {
+      if (op->getSymbol() != this->getSymbol()) {
+        return false;
+      }
+      if (op->size() != this->size()) {
+        return false;
+      }
+
+      std::vector<std::shared_ptr<Entity>> other_entities = op->getEntities();
+      const std::vector<std::shared_ptr<Entity>> own_entities = this->getEntities();
+
+      for (const std::shared_ptr<Entity>& own_entity : own_entities) {
+        for (auto it = other_entities.begin();
+             it != other_entities.end(); ++it) {
+          if (static_cast<bool>(own_entity->operator==(*it))) {
+            other_entities.erase(it);
+            break;
+          }
+        }
+      }
+
+      if (!other_entities.empty()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  [[nodiscard]] const std::string& getSymbol() const {
+    return symbol_;
+  }
+
  private:
   std::string symbol_;
 };

@@ -14,3 +14,53 @@ TEST_CASE("And'ing numerical values yields the correct result", "[numerical_valu
 
   REQUIRE(static_cast<uint32_t>(result) == (numeric_value_3 & numeric_value_5));
 }
+
+TEST_CASE("Comparing two equal ordered AND expressions yields the correct result", "[equality]") {
+  using Expr = expression::Expression<uint32_t, 4>;
+
+  const std::string variable_name_a = "a";
+  const std::string variable_name_b = "b";
+
+  Expr a(variable_name_a);
+  Expr b(variable_name_b);
+
+  Expr lhs = a & b;
+  Expr rhs = a & b;
+
+  REQUIRE(lhs == rhs);
+  REQUIRE(rhs == lhs);
+}
+
+TEST_CASE("Comparing two equal unordered AND expressions yields the correct result", "[equality]") {
+  using Expr = expression::Expression<uint32_t, 4>;
+
+  const std::string variable_name_a = "a";
+  const std::string variable_name_b = "b";
+
+  Expr a(variable_name_a);
+  Expr b(variable_name_b);
+
+  Expr lhs = a & b;
+  Expr rhs = b & a;
+
+  REQUIRE(lhs == rhs);
+  REQUIRE(rhs == lhs);
+}
+
+TEST_CASE("Comparing two unequal AND expressions yields the correct result", "[equality]") {
+  using Expr = expression::Expression<uint32_t, 4>;
+
+  const std::string variable_name_a = "a";
+  const std::string variable_name_b = "b";
+  const std::string variable_name_c = "c";
+
+  Expr a(variable_name_a);
+  Expr b(variable_name_b);
+  Expr c(variable_name_c);
+
+  Expr lhs = a & b;
+  Expr rhs = a & c;
+
+  REQUIRE(lhs != rhs);
+  REQUIRE(rhs != lhs);
+}

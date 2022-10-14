@@ -64,3 +64,4 @@ macro(declare_test name)
 endmacro()
 
 declare_test(and)
+declare_test(equality)
