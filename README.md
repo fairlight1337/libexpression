@@ -1,10 +1,16 @@
 # libexpression
 A C++ library to express (and evaluate) symbolic equations
 
+# System dependencies
+clang-tidy
+```bash
+sudo apt install clang-tidy
+```
+
 ## Building the project
 The `libexpression` project's buils system is CMake based. In order to build it from source, run the following commands from your command line:
 ```bash
-git clone https://github.com/fairlight1337/libexpression.git
+git clone --recurse-submodules https://github.com/fairlight1337/libexpression.git
 cd libexpression
 mkdir build
 cd build
