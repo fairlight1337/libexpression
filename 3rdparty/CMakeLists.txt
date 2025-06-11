@@ -2,5 +2,4 @@
 set(CMAKE_CXX_CLANG_TIDY "")
 
 # Add Catch2 for unit testing purposes
-set(CATCH_DEVELOPMENT_BUILD OFF)
-add_subdirectory(Catch2)
+# Catch2 is used header-only from the submodule

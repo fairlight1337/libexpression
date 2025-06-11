@@ -14,6 +14,7 @@
 // Operators
 #include <expression/and_operator.hpp>
 #include <expression/or_operator.hpp>
+#include <expression/xor_operator.hpp>
 
 namespace expression {
 
@@ -201,6 +202,34 @@ class Expression {
     }
 
     return or_expr;
+  }
+
+  Expression operator^(const Expression& expr) const {
+    Expression<TDataType, BitWidth> xor_expr(0);
+    for (size_t idx = 0; idx < entity_->size(); ++idx) {
+      const std::shared_ptr<ConstantEntity> lhs_const =
+          std::dynamic_pointer_cast<ConstantEntity>(entity_->operator[](idx));
+      const std::shared_ptr<ConstantEntity> rhs_const =
+          std::dynamic_pointer_cast<ConstantEntity>(expr.entity_->operator[](idx));
+      const State lhs_state = lhs_const ? lhs_const->state() : State::False;
+      const State rhs_state = rhs_const ? rhs_const->state() : State::False;
+
+      if (lhs_const && rhs_const) {
+        const bool res = (lhs_state == State::True) != (rhs_state == State::True);
+        xor_expr.entity_->operator[](idx) =
+            std::make_shared<ConstantEntity>(res ? State::True : State::False);
+      } else if (lhs_const && lhs_state == State::False) {
+        xor_expr.entity_->operator[](idx) = expr.entity_->operator[](idx);
+      } else if (rhs_const && rhs_state == State::False) {
+        xor_expr.entity_->operator[](idx) = entity_->operator[](idx);
+      } else {
+        xor_expr.entity_->operator[](idx) =
+            std::make_shared<XorOperator<TDataType, BitWidth>>(
+                entity_->operator[](idx), expr.entity_->operator[](idx));
+      }
+    }
+
+    return xor_expr;
   }
 
   template<unsigned int Length>
