@@ -65,3 +65,4 @@ endmacro()
 
 declare_test(and)
 declare_test(equality)
+declare_test(or)

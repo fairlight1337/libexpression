@@ -13,6 +13,7 @@
 
 // Operators
 #include <expression/and_operator.hpp>
+#include <expression/or_operator.hpp>
 
 namespace expression {
 
@@ -172,6 +173,34 @@ class Expression {
     }
 
     return and_expr;
+  }
+
+  Expression operator|(const Expression& expr) const {
+    Expression<TDataType, BitWidth> or_expr(0);
+    for (size_t idx = 0; idx < entity_->size(); ++idx) {
+      const std::shared_ptr<ConstantEntity> lhs_const =
+          std::dynamic_pointer_cast<ConstantEntity>(entity_->operator[](idx));
+      const std::shared_ptr<ConstantEntity> rhs_const =
+          std::dynamic_pointer_cast<ConstantEntity>(expr.entity_->operator[](idx));
+      const State lhs_state = lhs_const ? lhs_const->state() : State::False;
+      const State rhs_state = rhs_const ? rhs_const->state() : State::False;
+
+      if ((lhs_const && lhs_state == State::True) || (rhs_const && rhs_state == State::True)) {
+        or_expr.entity_->operator[](idx) = std::make_shared<ConstantEntity>(State::True);
+      } else if (lhs_const && rhs_const && lhs_state == State::False && rhs_state == State::False) {
+        or_expr.entity_->operator[](idx) = std::make_shared<ConstantEntity>(State::False);
+      } else if (lhs_const && lhs_state == State::False && !rhs_const) {
+        or_expr.entity_->operator[](idx) = expr.entity_->operator[](idx);
+      } else if (!lhs_const && rhs_const && rhs_state == State::False) {
+        or_expr.entity_->operator[](idx) = entity_->operator[](idx);
+      } else {
+        or_expr.entity_->operator[](idx) =
+            std::make_shared<OrOperator<TDataType, BitWidth>>(
+                entity_->operator[](idx), expr.entity_->operator[](idx));
+      }
+    }
+
+    return or_expr;
   }
 
   template<unsigned int Length>
