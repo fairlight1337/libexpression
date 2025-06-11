@@ -3,7 +3,7 @@
 
 #include <expression/expression.hpp>
 
-TEST_CASE("And'ing numerical values yields the correct result", "[numerical_values]") {
+TEST_CASE("Xor'ing numerical values yields the correct result", "[numerical_values]") {
   using Expr = expression::Expression<uint32_t, 4>;
 
   const uint32_t numeric_value_3 = 3U;
@@ -11,12 +11,12 @@ TEST_CASE("And'ing numerical values yields the correct result", "[numerical_valu
 
   Expr lhs(numeric_value_3);
   Expr rhs(numeric_value_5);
-  Expr result = lhs & rhs;
+  Expr result = lhs ^ rhs;
 
-  REQUIRE(static_cast<uint32_t>(result) == (numeric_value_3 & numeric_value_5));
+  REQUIRE(static_cast<uint32_t>(result) == (numeric_value_3 ^ numeric_value_5));
 }
 
-TEST_CASE("Comparing two equal ordered AND expressions yields the correct result", "[equality]") {
+TEST_CASE("Comparing two equal ordered XOR expressions yields the correct result", "[equality]") {
   using Expr = expression::Expression<uint32_t, 4>;
 
   const std::string variable_name_a = "a";
@@ -25,14 +25,14 @@ TEST_CASE("Comparing two equal ordered AND expressions yields the correct result
   Expr a(variable_name_a);
   Expr b(variable_name_b);
 
-  Expr lhs = a & b;
-  Expr rhs = a & b;
+  Expr lhs = a ^ b;
+  Expr rhs = a ^ b;
 
   REQUIRE(lhs == rhs);
   REQUIRE(rhs == lhs);
 }
 
-TEST_CASE("Comparing two equal unordered AND expressions yields the correct result", "[equality]") {
+TEST_CASE("Comparing two equal unordered XOR expressions yields the correct result", "[equality]") {
   using Expr = expression::Expression<uint32_t, 4>;
 
   const std::string variable_name_a = "a";
@@ -41,14 +41,14 @@ TEST_CASE("Comparing two equal unordered AND expressions yields the correct resu
   Expr a(variable_name_a);
   Expr b(variable_name_b);
 
-  Expr lhs = a & b;
-  Expr rhs = b & a;
+  Expr lhs = a ^ b;
+  Expr rhs = b ^ a;
 
   REQUIRE(lhs == rhs);
   REQUIRE(rhs == lhs);
 }
 
-TEST_CASE("Comparing two unequal AND expressions yields the correct result", "[equality]") {
+TEST_CASE("Comparing two unequal XOR expressions yields the correct result", "[equality]") {
   using Expr = expression::Expression<uint32_t, 4>;
 
   const std::string variable_name_a = "a";
@@ -59,8 +59,8 @@ TEST_CASE("Comparing two unequal AND expressions yields the correct result", "[e
   Expr b(variable_name_b);
   Expr c(variable_name_c);
 
-  Expr lhs = a & b;
-  Expr rhs = a & c;
+  Expr lhs = a ^ b;
+  Expr rhs = a ^ c;
 
   REQUIRE(lhs != rhs);
   REQUIRE(rhs != lhs);

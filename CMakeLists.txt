@@ -1,8 +1,16 @@
 cmake_minimum_required(VERSION 3.7.2)
 project(libexpression)
 
-# Configure clang-tidy
-set(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*,-modernize-use-trailing-return-type,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator,-llvm-header-guard;-header-filter=.*;-warnings-as-errors=*")
+# Configure clang-tidy when available
+if(NOT DEFINED CMAKE_CXX_CLANG_TIDY)
+  find_program(CLANG_TIDY_EXE NAMES clang-tidy)
+  if(CLANG_TIDY_EXE)
+    set(CMAKE_CXX_CLANG_TIDY
+        "${CLANG_TIDY_EXE};-checks=*,-modernize-use-trailing-return-type,-fuchsia-default-arguments-calls,-fuchsia-overloaded-operator,-llvm-header-guard;-header-filter=.*;-warnings-as-errors=*" )
+  else()
+    message(STATUS "clang-tidy not found, skipping static analysis")
+  endif()
+endif()
 
 # Using C++ 17
 set(CMAKE_CXX_STANDARD 17)
@@ -25,10 +33,10 @@ set(THIRDPARTY_DIR ${PROJECT_SOURCE_DIR}/3rdparty)
 
 # Add 3rdparty subdirectory
 add_subdirectory(${THIRDPARTY_DIR})
+find_package(Catch2 3 CONFIG REQUIRED)
 
 include_directories(
   include
-  ${THIRDPARTY_DIR}/Catch2/src
   ${CMAKE_BINARY_DIR}/generated-includes)
 
 link_directories(
@@ -55,8 +63,7 @@ macro(declare_test name)
 
   message(STATUS "Add test: ${name}")
   add_executable(test_${name} tests/${name}.cpp)
-  target_include_directories(test_${name} PUBLIC 3rdparty/Catch2/single_include)
-  target_link_libraries(test_${name} PUBLIC ${PROJECT_NAME} Catch2 Catch2WithMain)
+  target_link_libraries(test_${name} PUBLIC ${PROJECT_NAME} Catch2::Catch2WithMain)
   set_target_properties(test_${name}
     PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/tests)
@@ -66,3 +73,4 @@ endmacro()
 declare_test(and)
 declare_test(equality)
 declare_test(or)
+declare_test(xor)
