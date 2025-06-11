@@ -2,6 +2,7 @@
 #define EXPRESSION_TYPES_HPP_
 
 #include <string>
+#include <cstdint>
 
 namespace expression {
 
