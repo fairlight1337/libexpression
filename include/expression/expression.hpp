@@ -158,12 +158,11 @@ class Expression {
 
       if ((lhs_const && lhs_state == State::False) || (rhs_const && rhs_state == State::False)) {
         and_expr.entity_->operator[](idx) = std::make_shared<ConstantEntity>(State::False);
-      } else if ((lhs_const && lhs_state == State::True) ||
-                 (rhs_const && rhs_state == State::True)) {
+      } else if (lhs_const && rhs_const && lhs_state == State::True && rhs_state == State::True) {
         and_expr.entity_->operator[](idx) = std::make_shared<ConstantEntity>(State::True);
-      } else if ((lhs_const && lhs_state == State::True) && !rhs_const) {
+      } else if (lhs_const && lhs_state == State::True && !rhs_const) {
         and_expr.entity_->operator[](idx) = expr.entity_->operator[](idx);
-      } else if (!lhs_const && (rhs_const && rhs_state == State::True)) {
+      } else if (!lhs_const && rhs_const && rhs_state == State::True) {
         and_expr.entity_->operator[](idx) = entity_->operator[](idx);
       } else {
         and_expr.entity_->operator[](idx) =
